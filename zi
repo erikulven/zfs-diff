@@ -30,14 +30,16 @@ def snapshots(cmd):
 def snaps_repr(cmd, rpath, snaps):
     res = []
     for sn in snaps:
-        diff = colorize('same')
+        diff = 'same'
+        diff_color = 'green'
         if differs(rpath, sn.get('snapshot_path')):
-            diff = colorize('DIFF', color='red')
+            diff = 'diff'
+            diff_color = 'red'
         res.append("%s - %s - %s - %s" % (
-            colorize(sn.get('sid'), color='red'),
-            diff,
-            sn.get('creation'),
-            colorize(sn.get('snapshot'), color='red')))
+            colorize('% 3d' % sn.get('sid'), color='cyan'),
+            colorize(diff, color=diff_color),
+            colorize(sn.get('creation'), color=diff_color),
+            colorize(sn.get('snapshot'), color=diff_color)))
 
         if cmd.verbose:
             res.append("(%s)" % colorize(

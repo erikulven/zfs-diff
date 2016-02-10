@@ -202,10 +202,10 @@ command_mapping = {
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='ZFS Info')
-    parser.add_argument("-v", "--verbose",
-                        help="Prints out more information",
-                        default=False)
-    parser.add_argument('command', choices=command_mapping.keys())
+    parser.add_argument('-v', '--verbose', help="Verbose output",
+                        dest='verbose', action='store_true')
+    parser.add_argument('command',
+                        choices=command_mapping.keys())
     parser.add_argument('path')
     parser.add_argument('-d', '--diff',
                         dest="diffwith",

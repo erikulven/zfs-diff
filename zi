@@ -149,7 +149,7 @@ def zfs_snapshots():
 def differs(path1, path2):
     if os.path.isfile(path1):
         return not filecmp.cmp(path1, path2)
-    return not filecmp.dircmp(path1, path2)
+    return filecmp.dircmp(path1, path2).diff_files
 
 
 def diff_path(path1, path2):
@@ -163,7 +163,7 @@ def diff_path(path1, path2):
 def diff_dirs(diff_cmd, path1, path2):
     cmd = [diff_cmd, '-q', path1, path2]
     dproc = subprocess.Popen(cmd, stdout=subprocess.PIPE)
-    grep_cmd = ['/usr/bin/grep', 'differ']
+    grep_cmd = ['/usr/bin/grep', '-vi', 'common']
     gproc = subprocess.Popen(
         grep_cmd, stdin=dproc.stdout, stdout=subprocess.PIPE)
     return gproc.stdout.read().decode('utf-8')

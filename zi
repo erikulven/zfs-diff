@@ -154,10 +154,25 @@ def differs(path1, path2):
 
 def diff_path(path1, path2):
     diff_cmd = os.environ.get('DIFF', '/usr/bin/diff')
+    if os.path.isdir(path1):
+        return diff_dirs(diff_cmd, path1, path2)
+    else:
+        return diff_files(diff_cmd, path1, path2)
+
+
+def diff_dirs(diff_cmd, path1, path2):
+    cmd = [diff_cmd, '-q', path1, path2]
+    dproc = subprocess.Popen(cmd, stdout=subprocess.PIPE)
+    grep_cmd = ['/usr/bin/grep', 'differ']
+    gproc = subprocess.Popen(
+        grep_cmd, stdin=dproc.stdout, stdout=subprocess.PIPE)
+    return gproc.stdout.read().decode('utf-8')
+
+
+def diff_files(diff_cmd, path1, path2):
     cmd = [diff_cmd, path1, path2]
     proc = subprocess.Popen(cmd, stdout=subprocess.PIPE)
-    res = proc.stdout.read().decode('utf-8')
-    return res
+    return proc.stdout.read().decode('utf-8')
 
 
 def parse_date(dt_str):

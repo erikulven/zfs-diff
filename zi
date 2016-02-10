@@ -153,8 +153,9 @@ def differs(path1, path2):
 
 
 def diff_path(path1, path2):
-    proc = subprocess.Popen(['/usr/bin/diff', '-y', path1, path2],
-                            stdout=subprocess.PIPE)
+    diff_cmd = os.environ.get('DIFF', '/usr/bin/diff')
+    cmd = [diff_cmd, path1, path2]
+    proc = subprocess.Popen(cmd, stdout=subprocess.PIPE)
     res = proc.stdout.read().decode('utf-8')
     return res
 
@@ -191,6 +192,7 @@ if __name__ == '__main__':
     parser.add_argument('path')
     parser.add_argument('-d', '--diff',
                         dest="diffwith",
-                        help="Diff with snap number", default=None)
+                        help="Diff with snap number, customize with $DIFF env",
+                        default=None)
     cmd_args = parser.parse_args()
     print(command_mapping[cmd_args.command](cmd_args))

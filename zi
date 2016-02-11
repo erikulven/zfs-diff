@@ -163,7 +163,10 @@ def diff_path(path1, path2):
 
 
 def diff_dirs(diff_cmd, path1, path2):
-    cmd = [diff_cmd, '-q', path1, path2]
+    if diff_cmd.endswith('/diff'):
+        cmd = [diff_cmd, '-q', path1, path2]
+    else:
+        cmd = [diff_cmd, path1, path2]
     dproc = subprocess.Popen(cmd, stdout=subprocess.PIPE)
     grep_cmd = ['/usr/bin/grep', '-vi', 'common']
     gproc = subprocess.Popen(
